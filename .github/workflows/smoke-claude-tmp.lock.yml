@@ -18,8 +18,7 @@ jobs:
 
   activation:
     needs: pre_activation
-    if: always() && !cancelled()
-    # && (!needs.pre_activation.result || needs.pre_activation.outputs.activated == 'true')
+    if: always() && !cancelled() && (needs.pre_activation.result == 'skipped' || needs.pre_activation.outputs.activated == 'true')
     runs-on: ubuntu-slim
     steps:
         - run: |
@@ -27,7 +26,7 @@ jobs:
 
   agent:
     needs: ["pre_activation", "activation"]
-    if: always() && !cancelled() && (!needs.pre_activation.result || needs.pre_activation.outputs.activated == 'true')
+    if: always() && !cancelled() && (needs.pre_activation.result == 'skipped' || needs.pre_activation.outputs.activated == 'true')
     runs-on: ubuntu-slim
     steps:
         - run: |
